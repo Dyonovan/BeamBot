@@ -32,6 +32,9 @@ import java.util.concurrent.ExecutionException;
  */
 public class Beam {
 
+    private static Rcon rcon;
+    static BeamChatConnectable chatConnectible;
+
     public static void main(String[] args) throws ExecutionException, InterruptedException, IOException, AuthenticationException {
         String username = args[0];
         String password = args[1];
@@ -39,14 +42,15 @@ public class Beam {
 
         BeamUser user = beam.use(UsersService.class).login(username, password).get();
         BeamChat chat = beam.use(ChatService.class).findOne(user.channel.id).get();
-        BeamChatConnectable chatConnectable = chat.connectable(beam);
+        chatConnectible = chat.connectable(beam);
 
-        Rcon rcon = new Rcon("teambrmodding.com", 25589, "".getBytes()); //AddPassword
+        rcon = new Rcon("teambrmodding.com", 25589, "test123".getBytes()); //AddPassword
 
-        if (chatConnectable.connect()) {
-            chatConnectable.send(AuthenticateMessage.from(user.channel, user, chat.authkey), new ReplyHandler<AuthenticationReply>() {
+        if (chatConnectible.connect()) {
+            chatConnectible.send(AuthenticateMessage.from(user.channel, user, chat.authkey), new ReplyHandler<AuthenticationReply>() {
                 public void onSuccess(AuthenticationReply reply) {
-                    chatConnectable.send(ChatSendMethod.of("Hello World!"));
+                    chatConnectible.send(ChatSendMethod.of("Hello World!"));
+                    Points.addPoints();
                 }
                 public void onFailure(Throwable var1) {
                     var1.printStackTrace();
@@ -56,21 +60,72 @@ public class Beam {
 
         Robot robot = new RobotBuilder().username(username).password(password).channel(user.channel.id).build(beam).get();
 
-        robot.on(Protocol.Report.class, report -> {
-            for (Protocol.Report.TactileInfo tInfo : report.getTactileList()) {
-                boolean test = true;
-            }
-        });
 
-        chatConnectable.on(IncomingMessageEvent.class, event -> {
-            if (event.data.message.message.get(0).text.startsWith("!ping")) {
-                chatConnectable.send(ChatSendMethod.of(String.format("@%s PONG!",event.data.userName)));
-                try {
-                    rcon.command("say testing123");
-                } catch (IOException e) {
-                    e.printStackTrace();
+        robot.on(Protocol.Report.class, report -> {
+            if (report.getTactileCount() > 0) {
+                for (Protocol.Report.TactileInfo tactileInfo : report.getTactileList()) {
+                    if (tactileInfo.getReleaseFrequency() > 0) {
+                        //System.out.println("Button pressed was " + tactileInfo.getId());
+                        try {
+                            doAction(tactileInfo.getId(), (int)tactileInfo.getReleaseFrequency());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         });
+
+        chatConnectible.on(IncomingMessageEvent.class, event -> {
+            switch (event.data.message.message.get(0).text) {
+                case "!ping":
+                    chatConnectible.send(ChatSendMethod.of(String.format("@%s PONG!",event.data.userName)));
+                    break;
+                case "!spend":
+
+                    break;
+            }
+        });
+    }
+
+    private static void doAction(int ID, int times) throws IOException {
+        for (int i = 0; i < times; i++) {
+            switch (ID) {
+                case 0: //Set to day
+                    rcon.command("time set day");
+                    break;
+                case 1: //Set to Night
+                    rcon.command("time set night");
+                    break;
+                case 2: //Heal 5 hearts
+                    rcon.command("effect Dyonovan 6 1 1"); //TODO
+                    break;
+                case 3: //Enchant Item in Hand
+                    rcon.command(""); //TODO
+                    break;
+                case 4: //Give Random Potion
+                    rcon.command(""); //TODO
+                    break;
+                case 5: //Throw into Air
+                    rcon.command("tp Dyonovan ~ ~20 ~"); //TODO
+                    break;
+                case 6: //Give XP
+                    rcon.command(""); //TODO
+                    break;
+                case 7: //Strike with Lightning
+                    rcon.command(""); //TODO
+                    break;
+                case 8: //Spawn Creeper
+                    rcon.command(""); //TODO
+                    break;
+                case 9: //InstaKILL
+                    rcon.command("effect Dyonovan 7 1 100"); //TODO
+                    break;
+                case 10: //Spawn Wither
+                    rcon.command(""); //TODO
+                    break;
+                default:
+            }
+        }
     }
 }

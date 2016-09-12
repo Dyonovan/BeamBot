@@ -56,18 +56,17 @@ class Points {
         final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         scheduler.scheduleAtFixedRate(() -> {
-            //Add points here //TODO
-            Beam.chatConnectible.send(ChatSendMethod.of("Giving Points"));
+            Chat.chatConnectible.send(ChatSendMethod.of("Giving Points"));
 
             try {
-                OnlineUsersResponse onlineList = Beam.beam.use(ChatService.class).users(Beam.user.channel, 0, 50).get();
+                OnlineUsersResponse onlineList = Chat.beam.use(ChatService.class).users(Chat.user.channel, 0, 50).get();
                 for (OnlineChatUser user : onlineList) {
-
+                    //TODO Add points here
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
 
-        }, 0, 5, TimeUnit.MINUTES); //Change 0 to 5
+        }, 0, 5, TimeUnit.MINUTES); //TODO Change 0 to 5 and make Configurable
     }
 }

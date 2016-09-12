@@ -33,7 +33,7 @@ class Chat {
     static String password;
     static boolean isConnected = false;
 
-    public void connect(String username, String password) throws ExecutionException, InterruptedException {
+    public static void connect(String username, String password) throws ExecutionException, InterruptedException {
         Chat.username = username;
         Chat.password = password;
         beam = new BeamAPI();

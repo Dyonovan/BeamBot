@@ -34,17 +34,21 @@ public class Beam {
 
     private static Rcon rcon;
     static BeamChatConnectable chatConnectible;
+    static BeamAPI beam;
+    static BeamUser user;
 
     public static void main(String[] args) throws ExecutionException, InterruptedException, IOException, AuthenticationException {
         String username = args[0];
         String password = args[1];
-        BeamAPI beam = new BeamAPI();
+        beam = new BeamAPI();
 
-        BeamUser user = beam.use(UsersService.class).login(username, password).get();
+        user = beam.use(UsersService.class).login(username, password).get();
         BeamChat chat = beam.use(ChatService.class).findOne(user.channel.id).get();
         chatConnectible = chat.connectable(beam);
 
-        rcon = new Rcon("teambrmodding.com", 25589, "test123".getBytes()); //AddPassword
+        //rcon = new Rcon("127.0.0.1", 25589, "test123".getBytes()); //AddPassword TODO
+
+        Points.loadPoints();
 
         if (chatConnectible.connect()) {
             chatConnectible.send(AuthenticateMessage.from(user.channel, user, chat.authkey), new ReplyHandler<AuthenticationReply>() {
@@ -63,16 +67,13 @@ public class Beam {
 
         robot.on(Protocol.Report.class, report -> {
             if (report.getTactileCount() > 0) {
-                for (Protocol.Report.TactileInfo tactileInfo : report.getTactileList()) {
-                    if (tactileInfo.getReleaseFrequency() > 0) {
-                        //System.out.println("Button pressed was " + tactileInfo.getId());
-                        try {
-                            doAction(tactileInfo.getId(), (int)tactileInfo.getReleaseFrequency());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                report.getTactileList().stream().filter(tactileInfo -> tactileInfo.getReleaseFrequency() > 0).forEach(tactileInfo -> {
+                    try {
+                        doAction(tactileInfo.getId(), (int) tactileInfo.getReleaseFrequency(), "test"); //TODO check for response
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                }
+                });
             }
         });
 
@@ -88,7 +89,7 @@ public class Beam {
         });
     }
 
-    private static void doAction(int ID, int times) throws IOException {
+    private static boolean doAction(int ID, int times, String user) throws IOException {
         for (int i = 0; i < times; i++) {
             switch (ID) {
                 case 0: //Set to day
@@ -116,7 +117,8 @@ public class Beam {
                     rcon.command(""); //TODO
                     break;
                 case 8: //Spawn Creeper
-                    rcon.command(""); //TODO
+                    String response = rcon.command("cc_spawnentity Dyonovan creeper " + user); //TODO
+                    if (response.equalsIgnoreCase("That player cannot be found")) return false;
                     break;
                 case 9: //InstaKILL
                     rcon.command("effect Dyonovan 7 1 100"); //TODO
@@ -127,5 +129,6 @@ public class Beam {
                 default:
             }
         }
+        return true;
     }
 }

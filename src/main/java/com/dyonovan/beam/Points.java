@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import pro.beam.api.resource.chat.OnlineChatUser;
-import pro.beam.api.resource.chat.methods.ChatSendMethod;
 import pro.beam.api.response.chat.OnlineUsersResponse;
 import pro.beam.api.services.impl.ChatService;
 
@@ -28,7 +27,10 @@ import java.util.concurrent.TimeUnit;
  */
 class Points {
 
+    private final static int POINTS_LOOP = 25;
+
     private static Map<String, Integer> points;
+    static ScheduledExecutorService scheduler;
 
     static void loadPoints() throws FileNotFoundException {
         File file = new File("points.json");
@@ -53,20 +55,29 @@ class Points {
     }
 
     static void addPoints() {
-        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler = Executors.newScheduledThreadPool(1);
 
         scheduler.scheduleAtFixedRate(() -> {
-            Chat.chatConnectible.send(ChatSendMethod.of("Giving Points"));
-
             try {
-                OnlineUsersResponse onlineList = Chat.beam.use(ChatService.class).users(Chat.user.channel, 0, 50).get();
+                OnlineUsersResponse onlineList = Chat.beam.use(ChatService.class).users(Beam.controller.beamChannel, 0, 50).get();
                 for (OnlineChatUser user : onlineList) {
-                    //TODO Add points here
+                    int newPoints = POINTS_LOOP;
+                    if (points.containsKey(user.userName)) {
+                        newPoints += points.get(user.userName);
+                    }
+                    points.put(user.userName, newPoints);
                 }
+                savePoints();
+                Beam.controller.updateLog(POINTS_LOOP + " points added to everyone in chat...\n");
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
 
-        }, 0, 5, TimeUnit.MINUTES); //TODO Change 0 to 5 and make Configurable
+        }, 0, 5, TimeUnit.MINUTES);
+    }
+
+    static int getPoints(String username) {
+        if (points.containsKey(username)) return points.get(username);
+        return 0;
     }
 }

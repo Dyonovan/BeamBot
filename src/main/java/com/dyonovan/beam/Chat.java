@@ -2,6 +2,7 @@ package com.dyonovan.beam;
 
 import pro.beam.api.BeamAPI;
 import pro.beam.api.resource.BeamUser;
+import pro.beam.api.resource.channel.BeamChannel;
 import pro.beam.api.resource.chat.BeamChat;
 import pro.beam.api.resource.chat.events.IncomingMessageEvent;
 import pro.beam.api.resource.chat.methods.AuthenticateMessage;
@@ -29,20 +30,28 @@ class Chat {
     static BeamChatConnectable chatConnectible;
     static BeamAPI beam;
     static BeamUser user;
+    static BeamChat chat;
     static String username;
     static String password;
     static boolean isConnected = false;
 
-    public static void connect(String username, String password) throws ExecutionException, InterruptedException {
+    public static boolean connect(String username, String password, BeamChannel channel) throws InterruptedException {
         Chat.username = username;
         Chat.password = password;
-        beam = new BeamAPI();
-        user = beam.use(UsersService.class).login(username, password).get();
-        BeamChat chat = beam.use(ChatService.class).findOne(user.channel.id).get();
+        try {
+            user = beam.use(UsersService.class).login(username, password).get();
+        } catch (ExecutionException e) {
+            return false;
+        }
+        try {
+            chat = beam.use(ChatService.class).findOne(channel.id).get();
+        } catch (ExecutionException e) {
+            return false;
+        }
         chatConnectible = chat.connectable(beam);
 
         if (chatConnectible.connect()) {
-            chatConnectible.send(AuthenticateMessage.from(user.channel, user, chat.authkey), new ReplyHandler<AuthenticationReply>() {
+            chatConnectible.send(AuthenticateMessage.from(channel, user, chat.authkey), new ReplyHandler<AuthenticationReply>() {
                 public void onSuccess(AuthenticationReply reply) {
                     Chat.isConnected = true;
                     chatConnectible.send(ChatSendMethod.of("I am ALIVE!!"));
@@ -59,10 +68,16 @@ class Chat {
                 case "!ping":
                     chatConnectible.send(ChatSendMethod.of(String.format("@%s PONG!",event.data.userName)));
                     break;
+                case "#points":
+                case "#bal":
+                case "#balance":
+                    int points = Points.getPoints(event.data.userName);
+                    chatConnectible.send(ChatSendMethod.of(String.format("@%s You have " + points + " points!", event.data.userName)));
                 case "!spend":
 
                     break;
             }
         });
+        return true;
     }
 }

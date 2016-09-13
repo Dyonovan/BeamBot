@@ -1,10 +1,12 @@
 package com.dyonovan.beam;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import pro.beam.api.BeamAPI;
 
 /**
  * This file was created for beam
@@ -18,6 +20,8 @@ import javafx.stage.Stage;
  */
 public class Beam extends Application {
 
+    static Controller controller;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -25,17 +29,26 @@ public class Beam extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/maingui.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/maingui.fxml"));
+        Parent root = loader.load();
+        Beam.controller = loader.getController();
         primaryStage.setTitle("Beam Bot");
         primaryStage.setScene(new Scene(root, 400, 325));
         primaryStage.setResizable(false);
         primaryStage.show();
-
+        Properties.loadProperties();
         Points.loadPoints();
+        Chat.beam = new BeamAPI();
     }
 
     @Override
     public void stop() {
+        if (Chat.chatConnectible != null)
+            Chat.chatConnectible.disconnect();
+        if (Points.scheduler != null)
+            Points.scheduler.shutdownNow();
         Points.savePoints();
+        Platform.exit();
+        System.exit(0);
     }
 }

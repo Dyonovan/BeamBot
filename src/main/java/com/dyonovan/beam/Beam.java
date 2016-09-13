@@ -33,7 +33,7 @@ public class Beam extends Application {
         Parent root = loader.load();
         Beam.controller = loader.getController();
         primaryStage.setTitle("Beam Bot");
-        primaryStage.setScene(new Scene(root, 400, 325));
+        primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.setResizable(false);
         primaryStage.show();
         Properties.loadProperties();

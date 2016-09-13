@@ -23,14 +23,14 @@
       <RowConstraints />
    </rowConstraints>
    <children>
-      <TabPane prefHeight="311.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane prefHeight="550.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="Main">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <Button id="btnConnectChat" layoutX="284.0" layoutY="14.0" mnemonicParsing="false" onAction="#ConnectChat_onClick" prefHeight="25.0" prefWidth="110.0" text="Connect to Chat" />
-                        <Button layoutX="284.0" layoutY="46.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" text="Start Interactive" />
+                        <Button layoutX="284.0" layoutY="46.0" mnemonicParsing="false" onAction="#StartInteractive_onClick" prefHeight="25.0" prefWidth="110.0" text="Start Interactive" />
                         <TextArea fx:id="txtLog" editable="false" layoutX="6.0" layoutY="114.0" prefHeight="157.0" prefWidth="388.0" />
                         <Label layoutX="6.0" layoutY="97.0" text="Log Information" />
                      </children></AnchorPane>
@@ -41,15 +41,21 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <Separator layoutY="125.0" prefWidth="400.0" />
-                        <Label layoutX="14.0" layoutY="6.0" text="Beam Settings" />
-                        <Label layoutX="14.0" layoutY="127.0" text="Minecraft Settings" />
-                        <TextField fx:id="txtUserName" layoutX="144.0" layoutY="23.0" promptText="Enter Beam User..." />
-                        <Label layoutX="42.0" layoutY="27.0" text="Beam Username:" textAlignment="RIGHT" />
-                        <PasswordField fx:id="txtPassword" layoutX="144.0" layoutY="59.0" promptText="Enter Beam Password..." />
-                        <Label layoutX="43.0" layoutY="63.0" text="Beam Password:" textAlignment="RIGHT" />
+                        <Label layoutX="14.0" layoutY="6.0" text="Chat Settings" />
+                        <Label layoutX="14.0" layoutY="380.0" text="Minecraft Settings" />
+                        <TextField fx:id="txtUserName" layoutX="144.0" layoutY="23.0" promptText="Enter Bot Username..." />
+                        <Label layoutX="42.0" layoutY="27.0" text="Bot Username:" textAlignment="RIGHT" />
+                        <PasswordField fx:id="txtPassword" layoutX="144.0" layoutY="59.0" promptText="Enter Bot Password..." />
+                        <Label layoutX="43.0" layoutY="63.0" text="Bot Password:" textAlignment="RIGHT" />
                         <TextField fx:id="txtChannelName" layoutX="144.0" layoutY="94.0" promptText="Channel to Connect To..." />
                         <Label layoutX="26.0" layoutY="98.0" text="Channel Username:" textAlignment="RIGHT" />
                         <CheckBox fx:id="chkSave" layoutX="313.0" layoutY="15.0" mnemonicParsing="false" text="Save Info?" />
+                        <Separator layoutY="293.0" prefWidth="400.0" />
+                        <Label layoutX="12.0" layoutY="125.0" text="Interactive Settings" />
+                        <TextField fx:id="txtBeamName" layoutX="144.0" layoutY="151.0" promptText="Enter Beam Username..." />
+                        <PasswordField fx:id="txtBeamPassword" layoutX="144.0" layoutY="187.0" promptText="Enter Beam Password..." />
+                        <Label layoutX="42.0" layoutY="155.0" text="Beam Username:" />
+                        <Label layoutX="42.0" layoutY="191.0" text="Beam Password:" />
                      </children></AnchorPane>
             </content>
           </Tab>

@@ -13,6 +13,7 @@ import pro.beam.api.resource.chat.ws.BeamChatConnectable;
 import pro.beam.api.services.impl.ChatService;
 import pro.beam.api.services.impl.UsersService;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -57,6 +58,7 @@ class Chat {
                     chatConnectible.send(ChatSendMethod.of("I am ALIVE!!"));
                     Points.addPoints();
                 }
+
                 public void onFailure(Throwable var1) {
                     var1.printStackTrace();
                 }
@@ -64,18 +66,33 @@ class Chat {
         }
 
         chatConnectible.on(IncomingMessageEvent.class, event -> {
-            switch (event.data.message.message.get(0).text) {
-                case "!ping":
-                    chatConnectible.send(ChatSendMethod.of(String.format("@%s PONG!",event.data.userName)));
-                    break;
-                case "#points":
-                case "#bal":
-                case "#balance":
+            for (int i = 0; i < event.data.message.message.size(); i++) {
+                if (event.data.message.message.get(i).text.startsWith("!ping")) {
+                    chatConnectible.send(ChatSendMethod.of(String.format("@%s PONG!", event.data.userName)));
+                } else if (event.data.message.message.get(i).text.startsWith("#points") ||
+                        event.data.message.message.get(i).text.startsWith("#points") ||
+                        event.data.message.message.get(i).text.startsWith("#points")) {
                     int points = Points.getPoints(event.data.userName);
                     chatConnectible.send(ChatSendMethod.of(String.format("@%s You have " + points + " points!", event.data.userName)));
-                case "!spend":
-
-                    break;
+                } else if (event.data.message.message.get(i).text.startsWith("!spend")) {
+                    String[] msg = event.data.message.message.get(i).text.split(" ");
+                    if (msg.length == 1 || msg.length >= 4 || Integer.parseInt(msg[1]) > 10) { //TODO Map id to command
+                        chatConnectible.send(ChatSendMethod.of(String.format("@%s Spawn List: <TODO ENTER URL>", event.data.userName)));
+                        return;
+                    }
+                    try {
+                        Interactive.doAction(Integer.parseInt(msg[1]), msg[2] != null ? Integer.parseInt(msg[2]) : 1, event.data.userName);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (event.data.message.message.get(i).text.startsWith("#giveall")) { //TODO MAKE SURE USER IS A MOD
+                    String[] msg = event.data.message.message.get(i).text.split(" ");
+                    if (msg.length != 2) {
+                        chatConnectible.send(ChatSendMethod.of(String.format("@%s Usage: #giveall <amount>", event.data.userName)));
+                        return;
+                    }
+                    Points.givePointsToAll(Integer.parseInt(msg[1]));
+                }
             }
         });
         return true;

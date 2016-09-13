@@ -12,7 +12,7 @@ import java.io.*;
  * @author Dyonovan
  * @since 9/12/2016
  */
-public class Properties {
+class Properties {
 
     static void saveProperties() {
         java.util.Properties prop = new java.util.Properties();
@@ -25,6 +25,8 @@ public class Properties {
             prop.setProperty("Password", Beam.controller.txtPassword.getText()); //TODO maybe encrypt
             prop.setProperty("Channel", Beam.controller.txtChannelName.getText());
             prop.setProperty("Save", Beam.controller.chkSave.isSelected() ? "Yes" : "No");
+            prop.setProperty("BeamUsername", Beam.controller.txtBeamName.getText());
+            prop.setProperty("BeamPassword", Beam.controller.txtBeamPassword.getText());
 
             prop.store(output, null);
         } catch (IOException io) {
@@ -53,6 +55,9 @@ public class Properties {
             Beam.controller.txtPassword.setText(prop.getProperty("Password"));
             Beam.controller.txtChannelName.setText(prop.getProperty("Channel"));
             Beam.controller.chkSave.setSelected(prop.getProperty("Save").equals("Yes"));
+            Beam.controller.txtBeamName.setText(prop.getProperty("BeamUsername"));
+            Beam.controller.txtBeamPassword.setText(prop.getProperty("BeamPassword"));
+
         } catch (IOException ignored) {
 
         } finally {

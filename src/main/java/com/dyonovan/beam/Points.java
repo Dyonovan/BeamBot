@@ -57,27 +57,29 @@ class Points {
     static void addPoints() {
         scheduler = Executors.newScheduledThreadPool(1);
 
-        scheduler.scheduleAtFixedRate(() -> {
-            try {
-                OnlineUsersResponse onlineList = Chat.beam.use(ChatService.class).users(Beam.controller.beamChannel, 0, 50).get();
-                for (OnlineChatUser user : onlineList) {
-                    int newPoints = POINTS_LOOP;
-                    if (points.containsKey(user.userName)) {
-                        newPoints += points.get(user.userName);
-                    }
-                    points.put(user.userName, newPoints);
-                }
-                savePoints();
-                Beam.controller.updateLog(POINTS_LOOP + " points added to everyone in chat...\n");
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-
-        }, 0, 5, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(() -> givePointsToAll(POINTS_LOOP), 0, 5, TimeUnit.MINUTES);
     }
 
     static int getPoints(String username) {
         if (points.containsKey(username)) return points.get(username);
         return 0;
+    }
+
+    static void givePointsToAll(int amount) {
+        try {
+            OnlineUsersResponse onlineList = Chat.beam.use(ChatService.class).users(Beam.controller.beamChannel, 0, 50).get();
+            int newPoints = 0;
+            for (OnlineChatUser user : onlineList) {
+                newPoints = amount;
+                if (points.containsKey(user.userName)) {
+                    newPoints += points.get(user.userName);
+                }
+                points.put(user.userName, newPoints);
+            }
+            savePoints();
+            Beam.controller.updateLog(amount + " points added to everyone in chat...");
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 }

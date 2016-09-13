@@ -37,12 +37,21 @@ public class Controller implements Initializable {
     TextField txtChannelName;
     @FXML
     CheckBox chkSave;
+    @FXML
+    TextField txtBeamName;
+    @FXML
+    TextField txtBeamPassword;
+
 
     BeamChannel beamChannel;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+    }
+
+    public void StartInteractive_onClick(ActionEvent actionEvent) throws ExecutionException, InterruptedException {
+        Interactive.connect("127.0.0.1", 25589, "test123");
     }
 
     public void ConnectChat_onClick(ActionEvent actionEvent) throws ExecutionException, InterruptedException {

@@ -12,21 +12,20 @@ import java.io.*;
  * @author Dyonovan
  * @since 9/12/2016
  */
-class Properties {
+public class Properties {
 
-    static void saveProperties() {
+    public static void saveProperties() {
         java.util.Properties prop = new java.util.Properties();
         OutputStream output = null;
 
         try {
             output = new FileOutputStream("config.properties");
 
-            prop.setProperty("Username", Beam.controller.txtUserName.getText());
-            prop.setProperty("Password", Beam.controller.txtPassword.getText()); //TODO maybe encrypt
-            prop.setProperty("Channel", Beam.controller.txtChannelName.getText());
-            prop.setProperty("Save", Beam.controller.chkSave.isSelected() ? "Yes" : "No");
-            prop.setProperty("BeamUsername", Beam.controller.txtBeamName.getText());
-            prop.setProperty("BeamPassword", Beam.controller.txtBeamPassword.getText());
+            prop.setProperty("Username", Beam.mainGuiController.txtUserName.getText());
+            prop.setProperty("Password", Beam.mainGuiController.txtPassword.getText()); //TODO maybe encrypt
+            prop.setProperty("Channel", Beam.mainGuiController.txtChannelName.getText());
+            prop.setProperty("Save", Beam.mainGuiController.chkSave.isSelected() ? "Yes" : "No");
+            prop.setProperty("BeamOauth", Beam.mainGuiController.interactiveOauth.getText());
 
             prop.store(output, null);
         } catch (IOException io) {
@@ -51,12 +50,11 @@ class Properties {
 
             prop.load(input);
 
-            Beam.controller.txtUserName.setText(prop.getProperty("Username"));
-            Beam.controller.txtPassword.setText(prop.getProperty("Password"));
-            Beam.controller.txtChannelName.setText(prop.getProperty("Channel"));
-            Beam.controller.chkSave.setSelected(prop.getProperty("Save").equals("Yes"));
-            Beam.controller.txtBeamName.setText(prop.getProperty("BeamUsername"));
-            Beam.controller.txtBeamPassword.setText(prop.getProperty("BeamPassword"));
+            Beam.mainGuiController.txtUserName.setText(prop.getProperty("Username"));
+            Beam.mainGuiController.txtPassword.setText(prop.getProperty("Password"));
+            Beam.mainGuiController.txtChannelName.setText(prop.getProperty("Channel"));
+            Beam.mainGuiController.chkSave.setSelected(prop.getProperty("Save").equals("Yes"));
+            Beam.mainGuiController.interactiveOauth.setText(prop.getProperty("BeamOauth"));
 
         } catch (IOException ignored) {
 

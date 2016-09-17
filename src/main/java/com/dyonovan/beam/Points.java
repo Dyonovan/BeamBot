@@ -67,7 +67,7 @@ class Points {
 
     static void givePointsToAll(int amount) {
         try {
-            OnlineUsersResponse onlineList = Chat.beam.use(ChatService.class).users(Beam.controller.beamChannel, 0, 50).get();
+            OnlineUsersResponse onlineList = Chat.beam.use(ChatService.class).users(Beam.mainGuiController.beamChannel, 0, 50).get();
             int newPoints = 0;
             for (OnlineChatUser user : onlineList) {
                 newPoints = amount;
@@ -77,7 +77,7 @@ class Points {
                 points.put(user.userName, newPoints);
             }
             savePoints();
-            Beam.controller.updateLog(amount + " points added to everyone in chat...");
+            Beam.mainGuiController.updateLog(amount + " points added to everyone in chat...");
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }

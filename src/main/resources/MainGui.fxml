@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dyonovan.beam.controllers.MainGuiController">
+    <columnConstraints>
+        <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+        <RowConstraints />
+    </rowConstraints>
+    <children>
+        <TabPane prefHeight="600.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab text="Main">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <Button id="btnConnectChat" layoutX="284.0" layoutY="14.0" mnemonicParsing="false" onAction="#ConnectChat_onClick" prefHeight="25.0" prefWidth="110.0" text="Connect to Chat" />
+                                <Button layoutX="284.0" layoutY="46.0" mnemonicParsing="false" onAction="#StartInteractive_onClick" prefHeight="25.0" prefWidth="110.0" text="Start Interactive" />
+                                <TextArea fx:id="txtLog" editable="false" layoutX="6.0" layoutY="114.0" prefHeight="157.0" prefWidth="388.0" />
+                                <Label layoutX="6.0" layoutY="97.0" text="Log Information" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Interactive">
+               <content>
+                  <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     <!-- <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />-->
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="270.0" minHeight="10.0" prefHeight="165.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="411.0" minHeight="10.0" prefHeight="385.0" vgrow="SOMETIMES" />
+                      <!--<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />-->
+                    </rowConstraints>
+                     <children>
+                        <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="550.0" GridPane.rowIndex="1">
+                           <children>
+                              <TableView editable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="550.0">
+                                <columns>
+                                  <TableColumn maxWidth="400.0" minWidth="400.0" prefWidth="400.0" resizable="false" text="Action" />
+                                  <TableColumn maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Cost" />
+                                </columns>
+                              </TableView>
+                           </children>
+                        </StackPane>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <ButtonBar layoutX="336.0" layoutY="23.0" prefHeight="40.0" prefWidth="200.0">
+                                <buttons>
+                                  <Button mnemonicParsing="false" onAction="#AddNew_onClick" text="Add New" />
+                                </buttons>
+                              </ButtonBar>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                     <padding>
+                        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                     </padding>
+                  </GridPane>
+               </content>
+                </Tab>
+                <Tab text="Settings">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <Separator layoutY="125.0" prefWidth="400.0" />
+                                <Label layoutX="14.0" layoutY="6.0" text="Chat Settings" />
+                                <Label layoutX="12.0" layoutY="206.0" text="Minecraft Settings" />
+                                <TextField fx:id="txtUserName" layoutX="144.0" layoutY="23.0" promptText="Enter Bot Username..." />
+                                <Label layoutX="42.0" layoutY="27.0" text="Bot Username:" textAlignment="RIGHT" />
+                                <PasswordField fx:id="txtPassword" layoutX="144.0" layoutY="59.0" promptText="Enter Bot Password..." />
+                                <Label layoutX="43.0" layoutY="63.0" text="Bot Password:" textAlignment="RIGHT" />
+                                <TextField fx:id="txtChannelName" layoutX="144.0" layoutY="94.0" promptText="Channel to Connect To..." />
+                                <Label layoutX="26.0" layoutY="98.0" text="Channel Username:" textAlignment="RIGHT" />
+                                <CheckBox fx:id="chkSave" layoutX="313.0" layoutY="15.0" mnemonicParsing="false" text="Save Info?" />
+                                <Separator layoutY="203.0" prefWidth="400.0" />
+                                <Label layoutX="12.0" layoutY="125.0" text="Interactive Settings" />
+                                <PasswordField fx:id="interactiveOauth" layoutX="144.0" layoutY="157.0" promptText="Enter Beam Password..." />
+                                <Label layoutX="42.0" layoutY="161.0" text="Beam Oauth:" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
+</GridPane>

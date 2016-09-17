@@ -1,5 +1,7 @@
 package com.dyonovan.beam;
 
+import com.dyonovan.beam.controllers.AddControlGuiController;
+import com.dyonovan.beam.controllers.MainGuiController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -20,7 +22,9 @@ import pro.beam.api.BeamAPI;
  */
 public class Beam extends Application {
 
-    static Controller controller;
+    static MainGuiController mainGuiController;
+    public static AddControlGuiController addControlGuiController;
+    public static Stage primaryStage;
 
     public static void main(String[] args) {
         launch(args);
@@ -29,11 +33,12 @@ public class Beam extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/maingui.fxml"));
+        Beam.primaryStage = primaryStage;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainGui.fxml"));
         Parent root = loader.load();
-        Beam.controller = loader.getController();
+        Beam.mainGuiController = loader.getController();
         primaryStage.setTitle("Beam Bot");
-        primaryStage.setScene(new Scene(root, 600, 400));
+        primaryStage.setScene(new Scene(root, 600, 600));
         primaryStage.setResizable(false);
         primaryStage.show();
         Properties.loadProperties();
@@ -47,7 +52,10 @@ public class Beam extends Application {
             Chat.chatConnectible.disconnect();
         if (Points.scheduler != null)
             Points.scheduler.shutdownNow();
+        if (Interactive.robot != null)
+            Interactive.stopInteractive();
         Points.savePoints();
+        Properties.saveProperties();
         Platform.exit();
         System.exit(0);
     }

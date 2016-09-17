@@ -26,10 +26,10 @@ import java.util.concurrent.ExecutionException;
  * @author Dyonovan
  * @since 9/12/2016
  */
-class Chat {
+public class Chat {
 
     static BeamChatConnectable chatConnectible;
-    static BeamAPI beam;
+    public static BeamAPI beam;
     static BeamUser user;
     static BeamChat chat;
     static String username;
